@@ -6,7 +6,7 @@ workflows:
       - name: Generate Missing Wrapper
         script: |
           cd SnookerScoreCalculator
-          gradle wrapper --gradle-version 8.5
+          gradle wrapper --gradle-version 8.9
       - name: Build Android App
         script: |
           cd SnookerScoreCalculator
