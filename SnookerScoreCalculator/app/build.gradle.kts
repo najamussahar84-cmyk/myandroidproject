@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    namespace = "com.snooker.scorecalculator"
     compileSdk = 34
 
     defaultConfig {
