@@ -15,10 +15,17 @@ android {
         versionName = "1.0"
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xbackend-threads=0")
+        jvmTarget = "17"
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xbackend-threads=1")
     }
 }
+
 
 dependencies {
     implementation("androidx.core:core-ktx:1.15.0")
