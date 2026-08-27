@@ -1,0 +1,18 @@
+workflows:
+  android-workflow:
+    name: Android APK Build
+    max_build_duration: 30
+    instance_type: mac_mini
+    environment:
+      groups:
+        - android_config
+      vars:
+        PACKAGE_NAME: "com.example.snookerscorecalculator"
+    scripts:
+      - name: Build Android App
+        script: |
+          cd SnookerScoreCalculator
+          chmod +x gradlew
+          ./gradlew assembleDebug
+    artifacts:
+      - SnookerScoreCalculator/app/build/outputs/apk/debug/*.apk
