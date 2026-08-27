@@ -8,7 +8,7 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
-        freeCompilerArgs.add("-Xbackend-threads=0")
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xbackend-threads=0")
     }
 }
 
