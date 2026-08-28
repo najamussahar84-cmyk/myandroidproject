@@ -29,7 +29,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ScoreApp() {
-    // Replaced the buggy mutableIntStateOf wrapper with the universal standard mutableStateOf
     var scoreA by remember { mutableStateOf(0) }
     var scoreB by remember { mutableStateOf(0) }
 
