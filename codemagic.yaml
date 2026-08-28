@@ -3,14 +3,15 @@ workflows:
     name: Android APK Build
     max_build_duration: 30
     scripts:
-      - name: Generate Missing Wrapper
+      - name: Generate Fresh Environment
         script: |
           cd SnookerScoreCalculator
+          rm -rf .gradle
           gradle wrapper --gradle-version 8.9
       - name: Build Android App
         script: |
           cd SnookerScoreCalculator
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew clean assembleDebug
     artifacts:
       - SnookerScoreCalculator/app/build/outputs/apk/debug/*.apk
