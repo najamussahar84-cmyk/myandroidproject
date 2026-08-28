@@ -1,68 +1,66 @@
 package com.snooker.scorecalculator
 
 import android.os.Bundle
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    ScoreApp()
-                }
-            }
+        val webView = WebView(this).apply {
+            settings.javaScriptEnabled = true
+            webViewClient = WebViewClient()
+            loadDataWithBaseURL(null, """
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+                        body { font-family: sans-serif; text-align: center; background: #f0f0f0; padding: 20px; }
+                        h2 { color: #333; }
+                        .container { display: flex; justify-content: space-around; margin: 30px 0; }
+                        .player { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 40%; }
+                        .score { font-size: 48px; font-weight: bold; margin: 15px 0; color: #007bff; }
+                        button { padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; }
+                        .btn-add { background: #28a745; color: white; width: 100%; margin-bottom: 8px; }
+                        .btn-sub { background: #dc3545; color: white; width: 100%; }
+                        .btn-reset { background: #6c757d; color: white; padding: 12px 30px; font-size: 18px; }
+                    </style>
+                </head>
+                <body>
+                    <h2>Snooker Score Calculator</h2>
+                    <div class="container">
+                        <div class="player">
+                            <h3>Player A</h3>
+                            <div class="score" id="scoreA">0</div>
+                            <button class="btn-add" onclick="change('A', 1)">+1 Point</button>
+                            <button class="btn-sub" onclick="change('A', -1)">-1 Point</button>
+                        </div>
+                        <div class="player">
+                            <h3>Player B</h3>
+                            <div class="score" id="scoreB">0</div>
+                            <button class="btn-add" onclick="change('B', 1)">+1 Point</button>
+                            <button class="btn-sub" onclick="change('B', -1)">-1 Point</button>
+                        </div>
+                    </div>
+                    <button class="btn-reset" onclick="resetMatch()">Reset Match</button>
+                    <script>
+                        let sA = 0, sB = 0;
+                        function change(p, v) {
+                            if(p === 'A') { sA = Math.max(0, sA + v); document.getElementById('scoreA').innerText = sA; }
+                            else { sB = Math.max(0, sB + v); document.getElementById('scoreB').innerText = sB; }
+                        }
+                        function resetMatch() {
+                            sA = 0; sB = 0;
+                            document.getElementById('scoreA').innerText = 0;
+                            document.getElementById('scoreB').innerText = 0;
+                        }
+                    </script>
+                </body>
+                </html>
+            """, "text/html", "UTF-8", null)
         }
-    }
-}
-
-@Composable
-fun ScoreApp() {
-    var scoreA by remember { mutableStateOf(0) }
-    var scoreB by remember { mutableStateOf(0) }
-
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Snooker Score Calculator", fontSize = 24.sp, modifier = Modifier.padding(bottom = 32.dp))
-        
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Player A", fontSize = 20.sp)
-                Text(text = "$scoreA", fontSize = 48.sp, modifier = Modifier.padding(vertical = 16.dp))
-                Button(onClick = { scoreA += 1 }) { Text("+1 Point") }
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = { if (scoreA > 0) scoreA -= 1 }) { Text("-1 Point") }
-            }
-            
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Player B", fontSize = 20.sp)
-                Text(text = "$scoreB", fontSize = 48.sp, modifier = Modifier.padding(vertical = 16.dp))
-                Button(onClick = { scoreB += 1 }) { Text("+1 Point") }
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = { if (scoreB > 0) scoreB -= 1 }) { Text("-1 Point") }
-            }
-        }
-        
-        Spacer(modifier = Modifier.height(48.dp))
-        Button(onClick = { scoreA = 0; scoreB = 0 }, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)) {
-            Text("Reset Match")
-        }
+        setContentView(webView)
     }
 }
